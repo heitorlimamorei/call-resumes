@@ -37,10 +37,12 @@ export async function summarizeTranscript(transcript: string): Promise<string> {
       ${transcript}
       """
 
-      Por favor, gere um resumo em bullet points, para cada participante, indicando:
-      - O que fez no dia anterior
-      - Se há algum impedimento
-      - O que planeja fazer em seguida (se mencionado)
+      Por favor, gere um resumo, para cada participante, indicando as seguintes informações no formato abaixo:
+      "O que fez no dia anterior:
+      Se há algum impedimento:
+      O que planeja fazer em seguida (se mencionado):"
+
+      garanta que o resumo esteja formatado corretamente para ser enviado em um canal do slacka, sem bullet points ou texto em negrito.
 
       Responda em português de forma clara e sucinta.
     `;
