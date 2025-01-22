@@ -30,7 +30,9 @@ async function main() {
   try {
     if (!fs.existsSync(CALLS_FOLDER)) {
       console.error(`Pasta "calls" não encontrada em: ${CALLS_FOLDER}`);
-      process.exit(1);
+    } else {
+      console.log("Criando pasta calls")
+       fs.mkdirSync(CALLS_FOLDER, { recursive: true });
     }
 
     if (!fs.existsSync(RESUMES_FOLDER)) {
