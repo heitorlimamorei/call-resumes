@@ -1,5 +1,13 @@
-import openai from "./openai";
 import fs from 'fs';
+
+import dotenv from 'dotenv';
+import OpenAI from 'openai';
+
+dotenv.config();
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export async function transcribeAudio(filePath: string): Promise<string> {
   try {

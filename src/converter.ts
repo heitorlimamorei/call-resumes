@@ -4,7 +4,7 @@ import ffmpeg from 'fluent-ffmpeg';
 import ffmpegPath from 'ffmpeg-static';
 import { fileURLToPath } from 'url';
 
-ffmpeg.setFfmpegPath(ffmpegPath as string);
+ffmpeg.setFfmpegPath(ffmpegPath as unknown as string);
 
 const videosUrl = new URL('../videos/', import.meta.url);
 const audiosUrl = new URL('../calls/', import.meta.url);
