@@ -2,7 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import ffmpeg from 'fluent-ffmpeg';
 import ffmpegPath from 'ffmpeg-static';
+import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
+
+dotenv.config();
 
 ffmpeg.setFfmpegPath(ffmpegPath as unknown as string);
 
@@ -11,6 +14,9 @@ const audiosUrl = new URL('../calls/', import.meta.url);
 
 const videosPath = fileURLToPath(videosUrl);
 const audiosPath = fileURLToPath(audiosUrl);
+
+const VIDEO_FORMAT = process.env.INPUT_VIDEO_FORMAT;
+const AUDIO_FORMAT = process.env.INPUT_AUDIO_FORMAT;
 
 export class VideoToMp3Converter {
 public static async convertAllMovToMp3(): Promise<void> {
@@ -21,11 +27,11 @@ public static async convertAllMovToMp3(): Promise<void> {
 
    const files = fs.readdirSync(videosPath);
    const movFiles = files.filter(
-     (file) => path.extname(file).toLowerCase() === '.mov'
+     (file) => path.extname(file).toLowerCase() === `.${VIDEO_FORMAT}`,
    );
 
    if (movFiles.length === 0) {
-     console.log('Nenhum arquivo .mov encontrado na pasta videos.');
+     console.log(`Nenhum arquivo .${VIDEO_FORMAT} encontrado na pasta videos.`);
      return;
    }
 
@@ -45,9 +51,9 @@ private static convertSingleFile(fileName: string): Promise<void> {
  return new Promise((resolve, reject) => {
    const inputPath = path.join(videosPath, fileName);
    const baseName = path.parse(fileName).name;
-   const outputPath = path.join(audiosPath, `${baseName}.mp3`);
+   const outputPath = path.join(audiosPath, `${baseName}.${AUDIO_FORMAT}`);
 
-   console.log(`Iniciando conversão de "${fileName}" para "${baseName}.mp3"...`);
+   console.log(`Iniciando conversão de "${fileName}" para "${baseName}.${AUDIO_FORMAT}"...`);
 
    ffmpeg(inputPath)
      .audioCodec('libmp3lame')

@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+const AUDIO_FORMAT = process.env.INPUT_AUDIO_FORMAT;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,7 +19,7 @@ async function processFile(file: string): Promise<void> {
 
   const summary = await summarizeTranscript(transcript);
 
-  const baseName = path.basename(file, ".mp3");
+  const baseName = path.basename(file, `.${AUDIO_FORMAT}`);
   const outputFileName = `resume-${baseName}.txt`;
   const outputFilePath = path.join(RESUMES_FOLDER, outputFileName);
 
@@ -39,10 +40,10 @@ async function main() {
       fs.mkdirSync(RESUMES_FOLDER);
     }
 
-    const files = fs.readdirSync(CALLS_FOLDER).filter((file) => file.endsWith('.mp3'));
+    const files = fs.readdirSync(CALLS_FOLDER).filter((file) => file.endsWith(`.${AUDIO_FORMAT}`));
     
     if (files.length === 0) {
-      console.log('Nenhum arquivo .mp3 encontrado na pasta "calls".');
+      console.log(`Nenhum arquivo .${AUDIO_FORMAT} encontrado na pasta "calls".`);
       return;
     }
 
