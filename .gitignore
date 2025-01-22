@@ -1,0 +1,7 @@
+node_modules
+videos/*
+resumes/*
+calls/*
+# env files
+.env*
+dist/*
