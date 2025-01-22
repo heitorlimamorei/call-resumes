@@ -105,11 +105,5 @@ This Node.js application leverages **TypeScript**, **OpenAI's GPT-4**, and **Whi
 ---
 
 ## Notes
-- Ensure FFmpeg is installed and added to your system's PATH for video processing.
 - The application supports only the file formats specified in the `.env` file.
-
----
-
-## License
-This project is licensed under the MIT License. See the LICENSE file for details.
 
