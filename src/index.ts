@@ -13,7 +13,7 @@ const RESUMES_FOLDER = path.join(__dirname, '..', 'resumes');
 
 async function processFile(file: string): Promise<void> {
   const filePath = path.join(CALLS_FOLDER, file);
-  console.log(`\nProcessando arquivo: ${filePath}`);
+  console.log(`\nProcessando arquivo: ${filePath}\n`);
 
   const transcript = await transcribeAudio(filePath);
 
@@ -29,11 +29,11 @@ async function processFile(file: string): Promise<void> {
 
 async function main() {
   try {
-    if (!fs.existsSync(CALLS_FOLDER)) {
+    if (fs.existsSync(CALLS_FOLDER)) {
       console.error(`Pasta "calls" não encontrada em: ${CALLS_FOLDER}`);
     } else {
       console.log("Criando pasta calls")
-       fs.mkdirSync(CALLS_FOLDER, { recursive: true });
+      fs.mkdirSync(CALLS_FOLDER, { recursive: true });
     }
 
     if (!fs.existsSync(RESUMES_FOLDER)) {
@@ -41,13 +41,13 @@ async function main() {
     }
 
     const files = fs.readdirSync(CALLS_FOLDER).filter((file) => file.endsWith(`.${AUDIO_FORMAT}`));
-    
+
     if (files.length === 0) {
       console.log(`Nenhum arquivo .${AUDIO_FORMAT} encontrado na pasta "calls".`);
       return;
     }
 
-    const promises:Promise<void>[] = [];
+    const promises: Promise<void>[] = [];
 
     for (const file of files) promises.push(processFile(file))
 

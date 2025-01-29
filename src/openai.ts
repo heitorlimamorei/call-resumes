@@ -14,7 +14,7 @@ export async function transcribeAudio(filePath: string): Promise<string> {
     const response = await openai.audio.transcriptions.create({
       file: fs.createReadStream(filePath),
       model: 'whisper-1',
-      language: 'pt', 
+      language: 'pt',
     });
 
     return response.text;
@@ -32,19 +32,23 @@ export async function summarizeTranscript(transcript: string): Promise<string> {
     `;
 
     const userMessage = `
+      \n
       Texto da transcrição:
       """
       ${transcript}
       """
 
       Por favor, gere um resumo, para cada participante, indicando as seguintes informações no formato abaixo:
-      "O que fez no dia anterior:
+      "
+      {nome}
+      O que fez no dia anterior:
       Se há algum impedimento:
       O que planeja fazer em seguida (se mencionado):"
 
-      garanta que o resumo esteja formatado corretamente para ser enviado em um canal do slacka, sem bullet points ou texto em negrito.
+      Garanta que o resumo esteja formatado corretamente para ser enviado em um canal do Slack, sem bullet points ou texto em negrito.
 
       Responda em português de forma clara e sucinta.
+      \n
     `;
 
     const response = await openai.chat.completions.create({
@@ -55,12 +59,20 @@ export async function summarizeTranscript(transcript: string): Promise<string> {
       ],
       temperature: 0.7,
       max_tokens: 1000,
+      stream: true,
     });
 
-    const summary = response.choices[0]?.message?.content ?? '';
-    return summary.trim();
+    let fullContent = '';
+    for await (const chunk of response) {
+      const content = chunk.choices[0]?.delta?.content || '';
+      process.stdout.write(content);
+      fullContent += content;
+    }
+
+    console.log();
+    return fullContent.trim();
   } catch (error) {
-    console.error('Erro ao gerar resumo com GPT:', error);
+    console.error('\nErro ao gerar resumo com GPT:', error);
     throw error;
   }
 }
